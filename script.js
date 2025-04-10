@@ -1,114 +1,143 @@
+const board = document.querySelectorAll(".box");
+const turnDisplay = document.getElementById("turn-indicator");
+const xWins = document.getElementById("x-score");
+const oWins = document.getElementById("o-score");
+const draws = document.getElementById("draws");
+const totalGames = document.getElementById("total-games");
+const longestStreak = document.getElementById("streak");
+const winnerBox = document.getElementById("winner-box");
+const msg = document.getElementById("msg");
 
-let boxes = document.querySelectorAll(".box");
-let resetBtn = document.querySelector("#reset-btn");
-let newGameBtn = document.querySelector("#new-btn");
-let msgConatiner= document.querySelector(".msg-container");
-let msg = document.querySelector("#msg");
+let currentPlayer = "X";
+let winStreak = 0;
+let maxStreak = 0;
+let scores = { X: 0, O: 0, Draw: 0 };
 
-let turnO = true; //playerX, playerO
-let count=0; // to track draw
+// Show winner message
+function showWinnerMessage(winnerName) {
+  msg.textContent = `🎉 Congratulations ${winnerName}, you won the game! 🎉`;
+  winnerBox.classList.remove("hide");
 
-
-
-const winPatterns = [
-  [0, 1, 2],
-  [0, 3, 6],
-  [0, 4, 8],
-  [1, 4, 7],
-  [2, 5, 8],
-  [2, 4, 6],
-  [3, 4, 5],
-  [6, 7, 8],
-];
-
-const resetGame= () => {
-  turnO = true;
-  count=0;
-  enableBoxes();
-  msgConatiner.classList.add("hide");
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    winnerBox.classList.add("hide");
+  }, 3000);
 }
 
-// handle click on boxes 
-boxes.forEach((box) => {
-  box.addEventListener("click", () => {
-    if(turnO){
-      box.innerText = "O";
-      box.style.color= "blue";
-      turnO=false;
-    } else{
-      box.innerText="X";
-      box.style.color= "red";
-      turnO=true;
-    }
+// Update the turn indicator text
+function updateTurnDisplay() {
+  const nameX = document.getElementById("playerXName").value || "Player X";
+  const nameO = document.getElementById("playerOName").value || "Player O";
+  turnDisplay.textContent = currentPlayer === "X" ? `${nameX}'s Turn` : `${nameO}'s Turn`;
+}
 
-    box.disabled=true;
-    count++;
-
-    let isWinner= checkWinner();
-
-    if(count == 9 && !isWinner){
-      gameDraw();
-    }
+// Check for a winning pattern
+function checkWin() {
+  const winPatterns = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return winPatterns.find(pattern => {
+    const [a, b, c] = pattern;
+    return board[a].textContent &&
+           board[a].textContent === board[b].textContent &&
+           board[a].textContent === board[c].textContent;
   });
+}
+
+// Update scoreboard stats
+function updateStats(winner) {
+  scores[winner]++;
+  xWins.textContent = scores.X;
+  oWins.textContent = scores.O;
+  draws.textContent = scores.Draw;
+  totalGames.textContent = scores.X + scores.O + scores.Draw;
+
+  if (winner === currentPlayer) {
+    winStreak++;
+    maxStreak = Math.max(maxStreak, winStreak);
+  } else {
+    winStreak = 0;
+  }
+  longestStreak.textContent = maxStreak;
+}
+
+// Reset the board
+function resetBoard() {
+  board.forEach(cell => {
+    cell.textContent = "";
+    cell.classList.remove("win");
+  });
+  currentPlayer = "X";
+  updateTurnDisplay();
+}
+
+// Handle each box click
+function handleClick(e) {
+  const cell = e.target;
+  if (cell.textContent) return;
+
+  cell.textContent = currentPlayer;
+
+  const winnerPattern = checkWin();
+  if (winnerPattern) {
+    winnerPattern.forEach(i => board[i].classList.add("win"));
+    updateStats(currentPlayer);
+
+    const winnerName = currentPlayer === "X"
+      ? document.getElementById("playerXName").value || "Player X"
+      : document.getElementById("playerOName").value || "Player O";
+    showWinnerMessage(winnerName);
+
+    setTimeout(resetBoard, 1500);
+    return;
+  }
+
+  if ([...board].every(cell => cell.textContent)) {
+    updateStats("Draw");
+    setTimeout(resetBoard, 1500);
+    return;
+  }
+
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
+  updateTurnDisplay();
+}
+
+// Add event listeners to all cells
+board.forEach(cell => cell.addEventListener("click", handleClick));
+
+// Dark mode toggle
+document.getElementById("dark-toggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
 });
 
+// Avatar upload preview
+function handleAvatarUpload(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
 
-//Handle game draw
-
-const gameDraw = () =>{
-  msg.innerText=`Game was a a Draw.`;
-  msgConatiner.classList.remove("hide");
-  disableBoxes();
+  input.addEventListener("change", () => {
+    const file = input.files[0];
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+    }
+  });
 }
 
-const disableBoxes= ()=>{
-  for (let box of boxes) {
-     box.disabled=true;
-  }
-};
+handleAvatarUpload("avatarX", "avatarXPreview");
+handleAvatarUpload("avatarO", "avatarOPreview");
 
+// Update name display in turn indicator
+document.getElementById("playerXName").addEventListener("input", updateTurnDisplay);
+document.getElementById("playerOName").addEventListener("input", updateTurnDisplay);
 
-const enableBoxes= ()=>{
-  for (let box of boxes) {
-     box.disabled=false;
-     box.innerText="";
-     box.style.color="";  // Reset text color
-  }
-};
+// New Game button functionality
+document.getElementById("new-btn").addEventListener("click", () => {
+  winnerBox.classList.add("hide");
+  resetBoard();
+});
 
-
-const showWinner= (winner) => {
-  msg.innerText=`Congratulations, Winner is ${winner}`;
-  msgConatiner.classList.remove("hide");
-  disableBoxes();
-}
-
-//Check for a winner
-
-const checkWinner = () =>{
-  for(let pattern of winPatterns){
-    // console.log(pattern[0],pattern[1],pattern[2]);
-    // console.log(
-    //   boxes[pattern[0]].innerText,
-    //   boxes[pattern[1]].innerText,
-    //   boxes[pattern[2]].innerText);
-
-      let pos1Val = boxes[pattern[0]].innerText;
-      let pos2Val = boxes[pattern[1]].innerText;
-      let pos3Val = boxes[pattern[2]].innerText;
-
-      if(pos1Val != "" && pos2Val!="" && pos3Val!=""){
-        if(pos1Val===pos2Val && pos2Val===pos3Val){
-          //console.log("Winner",pos1Val);
-          showWinner(pos1Val);
-          return true;
-        }
-      }
-  }
-}
-
-
-newGameBtn.addEventListener("click", resetGame);
-resetBtn.addEventListener("click", resetGame);
-
-
+// Initial turn display
+updateTurnDisplay();
