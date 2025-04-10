@@ -10,6 +10,8 @@ Simple and intuitive interface
 
 Lightweight and easy to run
 
+![Screenshot 2025-04-10 140505](https://github.com/user-attachments/assets/0868faea-4a0a-4c11-8bce-ac11ac396ec4)
+
 How to Run
 Clone the repository:
 
@@ -28,3 +30,5 @@ Run the game:
 For Python: python tic_tac_toe.py
 
 For web version: Open index.html in your browser
+
+
