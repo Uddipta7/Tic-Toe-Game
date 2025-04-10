@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Toe-Game</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="msg-container hide">
-        <p id="msg">Winner!!! </p>
-        <button id="new-btn">New Game</button>
+  <main>
+    <!-- Dark Mode Toggle -->
+    <div class="top-bar">
+      <button id="dark-toggle">🌙 Dark Mode</button>
     </div>
-    <main>
-        <h1>Tic Tac Toe</h1>
+
+    <h1 class="title">Tic Tac Toe Game</h1>
+    <div id="turn-indicator">Player X's Turn</div>
+
+    <!-- Scoreboard -->
+    <div class="scoreboard">
+      <div>X Wins: <span id="x-score">0</span></div>
+      <div>O Wins: <span id="o-score">0</span></div>
+      <div>Draws: <span id="draws">0</span></div>
+    </div>
+
+    <!-- Game Layout -->
+    <div class="main-wrapper">
+      <!-- Left Sidebar -->
+      <div class="sidebar left">
+        <h3>🎯 Game Tips</h3>
+        <ul>
+          <li>⏱️ Take your time. The best move isn’t always obvious!</li>
+          <li>🧠 Try to control the center square early.</li>
+          <li>🧩 Watch for forks – chances to make two winning moves at once.</li>
+          <li>👀 Always look ahead for your opponent’s possible win.</li>
+          <li>🎯 Block your opponent’s 2-in-a-row chances!</li>
+        </ul>
+
+        <div class="player-info">
+          <h3>🧍 Player Info</h3>
+          <p>Player X Name: <input type="text" id="playerXName" placeholder="Enter name for X"></p>
+          <p>Upload Avatar X: <input type="file" id="avatarX" /><br><img id="avatarXPreview" class="avatar-preview" /></p>
+          <p>Player O Name: <input type="text" id="playerOName" placeholder="Enter name for O"></p>
+          <p>Upload Avatar O: <input type="file" id="avatarO" /><br><img id="avatarOPreview" class="avatar-preview" /></p>
+        </div>
+      </div>
+
+      <!-- Game Board -->
       <div class="container">
-      <div class="game">
+        <div class="game">
           <button class="box"></button>
           <button class="box"></button>
           <button class="box"></button>
@@ -25,9 +58,36 @@
           <button class="box"></button>
           <button class="box"></button>
         </div>
-       </div>
-       <button id="reset-btn">Reset Game</button>
-       <script src="script.js"></script>
-    </main>
+      </div>
+
+      <!-- Right Sidebar -->
+      <div class="sidebar right">
+        <h3>📊 Stats</h3>
+        <p>Total Games: <span id="total-games">0</span></p>
+        <p>Longest Streak: <span id="streak">0</span></p>
+        <p>Best Start: Center 😎</p>
+
+        <div class="quote">
+          <h3>🧠 Quote of the Game</h3>
+          <p>"Sometimes you win, sometimes you learn!"</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <button id="reset-btn">Reset Game</button>
+
+    <!-- Winner Message -->
+<div class="msg-container hide" id="winner-box">
+    <p id="msg">🎉 Congratulations! 🎉</p>
+    <button id="new-btn">New Game</button>
+  </div>
+  
+    <footer>
+      Made with 💡 & 🎮 by a Tic Tac Toe enthusiast. Keep clicking, keep winning!
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
