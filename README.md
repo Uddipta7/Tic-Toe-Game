@@ -1,5 +1,5 @@
 Tic-Tac-Toe Game 🎮
-This is a simple implementation of the classic Tic-Tac-Toe game built using [your tech stack – e.g., Python, JavaScript, HTML/CSS, etc.]. It allows two players to play the game turn by turn on a 3x3 grid until one wins or the game ends in a draw. The project is designed to demonstrate fundamental programming concepts like game logic, condition checking, and UI interaction.
+This is a simple implementation of the classic Tic-Tac-Toe game built using JavaScript, HTML/CSS. It allows two players to play the game turn by turn on a 3x3 grid until one wins or the game ends in a draw. The project is designed to demonstrate fundamental programming concepts like game logic, condition checking, and UI interaction.
 
 Features
 Two-player turn-based gameplay
